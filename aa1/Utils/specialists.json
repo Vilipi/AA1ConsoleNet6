@@ -1,0 +1,46 @@
+﻿[
+  {
+    "Name": "Tom",
+    "LastName": "Johnson",
+    "IsRetired": false,
+    "Rating": 0.1,
+    "BirthDate": "01/02/1876",
+    "Speciality": "General",
+    "UserName": "General",
+    "Password": "general1",
+    "Appointments": []
+  },
+  {
+    "Name": "Gregory",
+    "LastName": "House",
+    "IsRetired": false,
+    "Rating": 0.1,
+    "BirthDate": "01/03/1985",
+    "Speciality": "Dentist",
+    "UserName": "dentist",
+    "Password": "dentist1",
+    "Appointments": []
+  },
+  {
+    "Name": "Hugh",
+    "LastName": "Laurie",
+    "IsRetired": false,
+    "Rating": 0.1,
+    "BirthDate": "01/05/1980",
+    "Speciality": "Ophthalmologist",
+    "UserName": "ophthal",
+    "Password": "ophthal1",
+    "Appointments": []
+  },
+  {
+    "Name": "Lisa",
+    "LastName": "Edelstein",
+    "IsRetired": false,
+    "Rating": 0.1,
+    "BirthDate": "01/08/1990",
+    "Speciality": "Dermatologist",
+    "UserName": "derma",
+    "Password": "derma1",
+    "Appointments": []
+  }
+]
