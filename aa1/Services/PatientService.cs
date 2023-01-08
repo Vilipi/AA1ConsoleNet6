@@ -269,14 +269,15 @@ namespace aa1.Services
                             Console.WriteLine("Wrong number, try again");
                             Console.ResetColor();
                             appointmentToCancel = Console.ReadLine();
+                            appointmentToCancelBool = int.TryParse(appointmentToCancel, out appointmentToCancelInt);
                         }
                         var appointmentToCancelIndex = Int32.Parse(appointmentToCancel);    
-                        while (appointmentToCancelIndex < 0 || appointmentToCancelIndex > patientAppointments.Count)
+                        while (appointmentToCancelIndex < 0 || appointmentToCancelIndex > patientAppointments.Count -1)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Wrong number, try again");
                             Console.ResetColor();
-                            appointmentToCancel = Console.ReadLine();
+                            appointmentToCancelIndex = Int32.Parse(Console.ReadLine());
                         }
                         patientAppointments[appointmentToCancelIndex].IsCompleted = true;
                         Console.ForegroundColor = ConsoleColor.Green;
