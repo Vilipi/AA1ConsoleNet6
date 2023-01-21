@@ -288,9 +288,6 @@ namespace aa1.Services
             }
             else if(loggedPatientAction == "2")
             {
-                //appointmentString = _jsonService.GetListFromFile("appointments");
-                //appointments = _jsonService.DeserializeAppointmentJsonFile(patientsString);
-
                 var patientAppointments = appointments.FindAll(e => e.Patient.Email == patient.Email && e.IsCompleted == false).ToList();
                 if (patientAppointments.Count == 0 ) {
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -299,7 +296,14 @@ namespace aa1.Services
                 }
                 else
                 {
-                    patientAppointments.ForEach(e => Console.WriteLine($"- Appointment id: #{e.Id} - {e.Name}"));
+                    patientAppointments.ForEach(e => 
+                    {
+                        var price = e.Price == 0 ? "Pending" : e.Price.ToString();
+                        var comments = e.SpecialistComment == null ? "Pending" : e.SpecialistComment;
+                        Console.WriteLine($"- Appointment id: #{e.Id}-{e.Name}");
+                        Console.WriteLine($" - Total amount: #{price}");
+                        Console.WriteLine($" - Comments: #{comments}\n");
+                    });
                     Console.WriteLine("");
                     Console.WriteLine("Would you like to cancel an appointment?");
                     Console.WriteLine(" - 1: Yes");
