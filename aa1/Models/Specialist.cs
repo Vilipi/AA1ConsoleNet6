@@ -8,6 +8,7 @@ namespace aa1.Models
 {
     public class Specialist
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
         public bool IsRetired { get; set; }
@@ -16,7 +17,7 @@ namespace aa1.Models
         public string Speciality { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public List<Appointment> Appointments { get; set; }
+        //public List<Appointment> Appointments { get; set; }
         
     }
 }

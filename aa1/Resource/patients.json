@@ -1,0 +1,41 @@
+[
+  {
+    "Name": "User",
+    "LastName": "Admin",
+    "Gender": "male",
+    "BirthDate": "1990-01-01T00:00:00",
+    "IsUnderage": false,
+    "UserName": "aa",
+    "Password": "aa",
+    "Email": "aa@gmail.com",
+    "Appointments": []
+  },
+  {
+    "Name": "gaga",
+    "LastName": "gaga",
+    "Gender": "female",
+    "BirthDate": "2000-01-01T00:00:00",
+    "IsUnderage": false,
+    "UserName": "gaga",
+    "Password": "gaga",
+    "Email": "gaga@gmail.com",
+    "Appointments": []
+  },
+  {
+    "Name": "juana",
+    "LastName": "gabanna",
+    "Gender": "playerea",
+    "BirthDate": "2010-05-01T00:00:00",
+    "IsUnderage": true,
+    "UserName": "juana",
+    "Password": "juana",
+    "Email": "juana@gmail.uk.com",
+    "Appointments": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  }
+]

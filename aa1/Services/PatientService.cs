@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.PortableExecutable;
@@ -13,17 +15,7 @@ namespace aa1.Services
 {
     public class PatientService
     {
-
-        public static string _path = $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\Utils\specialists.json";
-
-        //private static string _path = @"C:\Users\Vicentury\source\repos\aa1\aa1\Utils\specialists.json";
-
-        public static List<Patient> patients = new List<Patient>
-        {
-            new Patient{Name = "Demo", LastName = "Demo", UserName = "demo", Password= "demo"} //usar de ejemplo
-        };
-        
-        public static List<Appointment> appointments = new List<Appointment>();
+        JsonService _jsonService = new JsonService();
 
         public int PatientMenu()
         {
@@ -47,11 +39,11 @@ namespace aa1.Services
             }
             else if(login == "2")
             {
-               var userlogged = SignIn();
-               var menu = LoggedPatientMenu(userlogged);
+               var userLogged = SignIn();
+               var menu = LoggedPatientMenu(userLogged);
                while (menu != 0)
                {
-                    menu = LoggedPatientMenu(userlogged);
+                    menu = LoggedPatientMenu(userLogged);
                }
                 return 0;
             }
@@ -63,6 +55,9 @@ namespace aa1.Services
 
         private int SignUp()
         {
+            var patientsString = _jsonService.GetListFromFile("patients");
+            var patients = _jsonService.DeserializePatientsJsonFile(patientsString);
+
             var newUser = new Patient();
             Console.WriteLine("Name:");
             newUser.Name = Console.ReadLine();
@@ -86,8 +81,23 @@ namespace aa1.Services
             }
             newUser.BirthDate = i;
 
+            var today = DateTime.Today;
+            var age = today.Year - i.Year;
+            if (i.Date > today.AddYears(-age)) age--;  
+            newUser.IsUnderage = age >= 18 ? false: true;
+
             Console.WriteLine("Email:");
-            newUser.Email = Console.ReadLine();
+            var email = Console.ReadLine();
+
+            while (!new EmailAddressAttribute().IsValid(email))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Wrong email format, try again");
+                Console.ResetColor();
+                email = Console.ReadLine();
+            }
+            newUser.Email = email;
+
             Console.WriteLine("UserName:");
             newUser.UserName = Console.ReadLine();
 
@@ -105,8 +115,9 @@ namespace aa1.Services
                 Console.WriteLine("Please repeat your password:");
                 passwordRepeated = Console.ReadLine();
             }
-
+            newUser.Appointments = new List<int>();
             patients.Add(newUser);
+            _jsonService.SerealizePatientsJsonFile(patients);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"\nUser {newUser.UserName} created !\n");
             //Console.WriteLine($"Your bd is {newUser.BirthDate.ToString("dd/MM/yyyy")}");
@@ -116,6 +127,9 @@ namespace aa1.Services
         }
         private Patient SignIn()
         {
+            var patientsString = _jsonService.GetListFromFile("patients");
+            var patients = _jsonService.DeserializePatientsJsonFile(patientsString);
+
             Console.WriteLine("Username: ");
             var inputUsername = Console.ReadLine();
             var existingUser = patients.Find(x => x.UserName == inputUsername);
@@ -145,6 +159,13 @@ namespace aa1.Services
         }
         private int LoggedPatientMenu(Patient patient) 
         {
+            var patientsString = _jsonService.GetListFromFile("patients");
+            var patients = _jsonService.DeserializePatientsJsonFile(patientsString);
+
+            var appointmentString = _jsonService.GetListFromFile("appointment");
+            var appointments = _jsonService.DeserializeAppointmentJsonFile(appointmentString);
+
+
             Console.WriteLine("Please write one of the following numbers:");
             Console.WriteLine(" - 1: Book new appointment");
             Console.WriteLine(" - 2: View my appointments");
@@ -157,27 +178,50 @@ namespace aa1.Services
                 Console.WriteLine("Wrong number, try again");
                 Console.ResetColor();
                 loggedPatientAction = Console.ReadLine();
-
             }
             if (loggedPatientAction == "1")
             {
-                Console.WriteLine("Please choose one of the following specialities:");
-                Console.WriteLine(" - 1: General");
-                Console.WriteLine(" - 2: Dentist"); 
-                Console.WriteLine(" - 3: Ophthalmologist");
-                Console.WriteLine(" - 4: Dermatologist");
-
-                string specialistElection = Console.ReadLine();
-
-                while (specialistElection != "1" && specialistElection != "2" && specialistElection != "3" && specialistElection != "4")
+                string specialistElection;
+                if (!patient.IsUnderage)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Wrong number, try again");
-                    Console.ResetColor();
+                    Console.WriteLine("Please choose one of the following specialities:");
+                    Console.WriteLine(" - 1: General");
+                    Console.WriteLine(" - 2: Dentist");
+                    Console.WriteLine(" - 3: Ophthalmologist");
+                    Console.WriteLine(" - 4: Dermatologist");
+
                     specialistElection = Console.ReadLine();
+
+                    while (specialistElection != "1" && specialistElection != "2" && specialistElection != "3" && specialistElection != "4")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Wrong number, try again");
+                        Console.ResetColor();
+                        specialistElection = Console.ReadLine();
+                    }
                 }
-                var specilasitsString = GetSpecialistListFromFile();
-                var specialiast = DeserializeJsonFile(specilasitsString);
+                else
+                {
+                    Console.WriteLine("Please choose one of the following specialities:");
+                    Console.WriteLine(" - 1: General");
+                    Console.WriteLine(" - 2: Dentist");
+                    Console.WriteLine(" - 3: Ophthalmologist");
+                    Console.WriteLine(" - 4: Dermatologist");
+                    Console.WriteLine(" - 5: Pediatrician");
+
+                    specialistElection = Console.ReadLine();
+
+                    while (specialistElection != "1" && specialistElection != "2" && specialistElection != "3" && specialistElection != "4" && specialistElection != "5")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Wrong number, try again");
+                        Console.ResetColor();
+                        specialistElection = Console.ReadLine();
+                    }
+                }
+           
+                var specilasitsString = _jsonService.GetListFromFile("specialist");
+                var specialist = _jsonService.DeserializeSpecialistsJsonFile(specilasitsString);
 
                 var newAppointment = new Appointment(); // creando nuevo appointment
                 newAppointment.Id = appointments.Count + 1;
@@ -186,12 +230,11 @@ namespace aa1.Services
                 newAppointment.Price = 0;
                 newAppointment.SpecialistComment = null;
 
-
                 switch (specialistElection)
                 {
                     case "1":
                         newAppointment.Name = $"{patient.UserName}-General-Book";
-                        newAppointment.Specialist = specialiast.Find(e => e.Speciality == "General");
+                        newAppointment.Specialist = specialist.Find(e => e.Speciality == "General");
                         newAppointment.AppointmentCreationDate = DateTime.Now;
                         Console.WriteLine("General appointment created");
                         Console.WriteLine("You'll be receiving an email shortly with further details");
@@ -199,7 +242,7 @@ namespace aa1.Services
 
                     case "2":
                         newAppointment.Name = $"{patient.UserName}-Dentist-Book";
-                        newAppointment.Specialist = specialiast.Find(e => e.Speciality == "Dentist");
+                        newAppointment.Specialist = specialist.Find(e => e.Speciality == "Dentist");
                         newAppointment.AppointmentCreationDate = DateTime.Now;
                         Console.WriteLine("Dentist appointment created");
                         Console.WriteLine("You'll be receiving an email shortly with further details");
@@ -207,20 +250,37 @@ namespace aa1.Services
 
                     case "3":
                         newAppointment.Name = $"{patient.UserName}-Ophthalmologist-Book";
-                        newAppointment.Specialist = specialiast.Find(e => e.Speciality == "Ophthalmologist");
+                        newAppointment.Specialist = specialist.Find(e => e.Speciality == "Ophthalmologist");
                         newAppointment.AppointmentCreationDate = DateTime.Now;
                         Console.WriteLine("Ophthalmologist appointment created");
                         Console.WriteLine("You'll be receiving an email shortly with further details");
                         break;
                     case "4":
                         newAppointment.Name = $"{patient.UserName}-Dermatologist-Book";
-                        newAppointment.Specialist = specialiast.Find(e => e.Speciality == "Dermatologist");
+                        newAppointment.Specialist = specialist.Find(e => e.Speciality == "Dermatologist");
                         newAppointment.AppointmentCreationDate = DateTime.Now;
                         Console.WriteLine("Dermatologist appointment created");
                         Console.WriteLine("You'll be receiving an email shortly with further details");
                         break;
+                    case "5":
+                        newAppointment.Name = $"{patient.UserName}-Pediatrician-Book";
+                        newAppointment.Specialist = specialist.Find(e => e.Speciality == "Pediatrician");
+                        newAppointment.AppointmentCreationDate = DateTime.Now;
+                        Console.WriteLine("Pediatrician appointment created");
+                        Console.WriteLine("You'll be receiving an email shortly with further details");
+                        break;
                 }
-                appointments.Add(newAppointment); // adding modified appointment
+                patient.Appointments.Add(newAppointment.Id);
+                int index = patients.FindIndex(e => e.Email == patient.Email);
+                patients[index] = patient;
+                _jsonService.SerealizePatientsJsonFile(patients); //modifiying patient file
+
+
+                appointments.Add(newAppointment); 
+                _jsonService.SerealizeAppointmentJsonFile(appointments); //adding to file
+                appointmentString = _jsonService.GetListFromFile("appointments");
+                appointments = _jsonService.DeserializeAppointmentJsonFile(appointmentString);
+
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Appointment booked!\n");
                 Console.ResetColor();
@@ -228,7 +288,10 @@ namespace aa1.Services
             }
             else if(loggedPatientAction == "2")
             {
-                var patientAppointments = appointments.FindAll(e => e.Patient == patient && e.IsCompleted == false).ToList();
+                //appointmentString = _jsonService.GetListFromFile("appointments");
+                //appointments = _jsonService.DeserializeAppointmentJsonFile(patientsString);
+
+                var patientAppointments = appointments.FindAll(e => e.Patient.Email == patient.Email && e.IsCompleted == false).ToList();
                 if (patientAppointments.Count == 0 ) {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("No appointments booked\n");
@@ -236,7 +299,7 @@ namespace aa1.Services
                 }
                 else
                 {
-                    patientAppointments.ForEach(e => Console.WriteLine($"- {e.Id} - {e.Name}"));
+                    patientAppointments.ForEach(e => Console.WriteLine($"- Appointment id: #{e.Id} - {e.Name}"));
                     Console.WriteLine("");
                     Console.WriteLine("Would you like to cancel an appointment?");
                     Console.WriteLine(" - 1: Yes");
@@ -257,7 +320,7 @@ namespace aa1.Services
 
                         for (int i = 0; i < patientAppointments.Count; i++)
                         {
-                            Console.WriteLine($" - {i}: {patientAppointments[i].Name}");
+                            Console.WriteLine($" - {i}: {patientAppointments[i].Name} - Id:{patientAppointments[i].Id}");
                         }
                         var appointmentToCancel = Console.ReadLine();
                         int appointmentToCancelInt;
@@ -280,6 +343,11 @@ namespace aa1.Services
                             appointmentToCancelIndex = Int32.Parse(Console.ReadLine());
                         }
                         patientAppointments[appointmentToCancelIndex].IsCompleted = true;
+
+                        int index = appointments.FindIndex(e => e.Id == patientAppointments[appointmentToCancelIndex].Id);
+                        appointments[index] = patientAppointments[appointmentToCancelIndex];
+                        _jsonService.SerealizeAppointmentJsonFile(appointments); //modifiying patient file
+
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Appointment cancelled");
                         Console.ResetColor();
@@ -291,21 +359,6 @@ namespace aa1.Services
             {
                 return 0;
             }
-        }
-
-        // Info from JSON
-        private string GetSpecialistListFromFile()
-        {
-            string specilistsJsonFromFile;
-            using (var reader = new StreamReader(_path))
-            {
-                specilistsJsonFromFile = reader.ReadToEnd();
-            }
-            return specilistsJsonFromFile;
-        }
-        private List<Specialist> DeserializeJsonFile(string specilistsJsonFromFile)
-        {
-            return JsonConvert.DeserializeObject<List<Specialist>>(specilistsJsonFromFile);
         }
     }
 }

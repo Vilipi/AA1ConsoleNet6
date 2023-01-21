@@ -1,5 +1,6 @@
 ﻿[
   {
+    "Id": 1,
     "Name": "Tom",
     "LastName": "Johnson",
     "IsRetired": false,
@@ -11,6 +12,7 @@
     "Appointments": []
   },
   {
+    "Id": 2,
     "Name": "Gregory",
     "LastName": "House",
     "IsRetired": false,
@@ -22,6 +24,7 @@
     "Appointments": []
   },
   {
+    "Id": 3,
     "Name": "Hugh",
     "LastName": "Laurie",
     "IsRetired": false,
@@ -33,12 +36,25 @@
     "Appointments": []
   },
   {
+    "Id": 4,
     "Name": "Lisa",
     "LastName": "Edelstein",
     "IsRetired": false,
     "Rating": 0.1,
     "BirthDate": "01/08/1990",
     "Speciality": "Dermatologist",
+    "UserName": "derma",
+    "Password": "derma1",
+    "Appointments": []
+  },
+  {
+    "Id": 4,
+    "Name": "Agnieszka",
+    "LastName": "Duda",
+    "IsRetired": false,
+    "Rating": 0.1,
+    "BirthDate": "01/08/1992",
+    "Speciality": "Pediatrician",
     "UserName": "derma",
     "Password": "derma1",
     "Appointments": []
