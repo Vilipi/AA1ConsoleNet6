@@ -30,12 +30,6 @@
     "UserName": "juana",
     "Password": "juana",
     "Email": "juana@gmail.uk.com",
-    "Appointments": [
-      1,
-      2,
-      3,
-      4,
-      5
-    ]
+    "Appointments": []
   }
 ]

@@ -87,10 +87,10 @@ namespace aa1.Services
                     return 1;
                     break;
                 case "3":
-                    return 0;
+                    return 1;
                     break;
                 default:
-                    return 0;
+                    return 1;
             }
         }
 
@@ -183,8 +183,8 @@ namespace aa1.Services
                         }
                         appointmentSelected.Price = decimal.Parse(newPriceString);
 
-                        int index = appointments.FindIndex(e => e.Id == appointmentSelected.Id);
-                        appointments[index] = appointmentSelected;
+                        int index1 = appointments.FindIndex(e => e.Id == appointmentSelected.Id);
+                        appointments[index1] = appointmentSelected;
                         _jsonService.SerealizeAppointmentJsonFile(appointments); //modifiying appointment file
 
                         Console.ForegroundColor = ConsoleColor.Green;
@@ -192,16 +192,50 @@ namespace aa1.Services
                         Console.ResetColor();
                     }
                     return 1;
-                    break;
+
                 case "2":
+                    if (appointmentSelected.SpecialistComment == null)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("This appointment already has a comment\n");
+                        Console.ResetColor();
+                        return 0;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Add comment:");
+                        string newCommentString = Console.ReadLine();
+                        while (newCommentString == null)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Wrong comment, try again");
+                            Console.ResetColor();
+                            newCommentString = Console.ReadLine();
+                        }
+                        appointmentSelected.SpecialistComment = newCommentString;
+
+                        int index2 = appointments.FindIndex(e => e.Id == appointmentSelected.Id);
+                        appointments[index2] = appointmentSelected;
+                        _jsonService.SerealizeAppointmentJsonFile(appointments); //modifiying appointment file
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("\nComment changed\n");
+                        Console.ResetColor();
+                    }
                     return 1;
-                    break;
+
                 case "3":
+                    appointmentSelected.IsCompleted = true;
+                    int index = appointments.FindIndex(e => e.Id == appointmentSelected.Id);
+                    appointments[index] = appointmentSelected;
+                    _jsonService.SerealizeAppointmentJsonFile(appointments); //modifiying appointment file
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("\nAppointment competed!\n");
+                    Console.ResetColor();
                     return 1;
-                    break;
                 default:
                     return 1;
-                    break;
             }
         }
     }
