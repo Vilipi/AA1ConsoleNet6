@@ -52,7 +52,6 @@ namespace aa1.Services
                 return 0;
             }
         }
-
         private int SignUp()
         {
             var patientsString = _jsonService.GetListFromFile("patients");
@@ -233,7 +232,7 @@ namespace aa1.Services
                 switch (specialistElection)
                 {
                     case "1":
-                        newAppointment.Name = $"{patient.UserName}-General-Book";
+                        newAppointment.Name = $"{patient.UserName}-General-Book-{newAppointment.Id}";
                         newAppointment.Specialist = specialist.Find(e => e.Speciality == "General");
                         newAppointment.AppointmentCreationDate = DateTime.Now;
                         Console.WriteLine("General appointment created");
@@ -241,7 +240,7 @@ namespace aa1.Services
                         break;
 
                     case "2":
-                        newAppointment.Name = $"{patient.UserName}-Dentist-Book";
+                        newAppointment.Name = $"{patient.UserName}-Dentist-Book-{newAppointment.Id}";
                         newAppointment.Specialist = specialist.Find(e => e.Speciality == "Dentist");
                         newAppointment.AppointmentCreationDate = DateTime.Now;
                         Console.WriteLine("Dentist appointment created");
@@ -249,21 +248,21 @@ namespace aa1.Services
                         break;
 
                     case "3":
-                        newAppointment.Name = $"{patient.UserName}-Ophthalmologist-Book";
+                        newAppointment.Name = $"{patient.UserName}-Ophthalmologist-Book-{newAppointment.Id}";
                         newAppointment.Specialist = specialist.Find(e => e.Speciality == "Ophthalmologist");
                         newAppointment.AppointmentCreationDate = DateTime.Now;
                         Console.WriteLine("Ophthalmologist appointment created");
                         Console.WriteLine("You'll be receiving an email shortly with further details");
                         break;
                     case "4":
-                        newAppointment.Name = $"{patient.UserName}-Dermatologist-Book";
+                        newAppointment.Name = $"{patient.UserName}-Dermatologist-Book-{newAppointment.Id}";
                         newAppointment.Specialist = specialist.Find(e => e.Speciality == "Dermatologist");
                         newAppointment.AppointmentCreationDate = DateTime.Now;
                         Console.WriteLine("Dermatologist appointment created");
                         Console.WriteLine("You'll be receiving an email shortly with further details");
                         break;
                     case "5":
-                        newAppointment.Name = $"{patient.UserName}-Pediatrician-Book";
+                        newAppointment.Name = $"{patient.UserName}-Pediatrician-Book-{newAppointment.Id}";
                         newAppointment.Specialist = specialist.Find(e => e.Speciality == "Pediatrician");
                         newAppointment.AppointmentCreationDate = DateTime.Now;
                         Console.WriteLine("Pediatrician appointment created");
@@ -301,8 +300,8 @@ namespace aa1.Services
                         var price = e.Price == 0 ? "Pending" : e.Price.ToString();
                         var comments = e.SpecialistComment == null ? "Pending" : e.SpecialistComment;
                         Console.WriteLine($"- Appointment id: #{e.Id}-{e.Name}");
-                        Console.WriteLine($" - Total amount: #{price}");
-                        Console.WriteLine($" - Comments: #{comments}\n");
+                        Console.WriteLine($" - Total amount: {price}");
+                        Console.WriteLine($" - Comments: {comments}\n");
                     });
                     Console.WriteLine("");
                     Console.WriteLine("Would you like to cancel an appointment?");
@@ -329,24 +328,30 @@ namespace aa1.Services
                         var appointmentToCancel = Console.ReadLine();
                         int appointmentToCancelInt;
                         bool appointmentToCancelBool = int.TryParse(appointmentToCancel, out appointmentToCancelInt);
-                        //&& Int32.Parse(appointmentToCancel) >= 0 && Int32.Parse(appointmentToCancel) < patientAppointments.Count
-                        while (appointmentToCancelBool == false)
+
+                        appointmentToCancelInt = appointmentToCancelBool == true ? Int32.Parse(appointmentToCancel) : 0;
+
+                        var appointmentSelected = patientAppointments.Find(e => e.Id == appointmentToCancelInt);
+
+                        while (appointmentSelected == null)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Wrong number, try again");
                             Console.ResetColor();
                             appointmentToCancel = Console.ReadLine();
                             appointmentToCancelBool = int.TryParse(appointmentToCancel, out appointmentToCancelInt);
+                            appointmentToCancelInt = appointmentToCancelBool == true ? Int32.Parse(appointmentToCancel) : 0;
+                            appointmentSelected = patientAppointments.Find(e => e.Id == appointmentToCancelInt);
                         }
-                        var appointmentToCancelIndex = Int32.Parse(appointmentToCancel);    
-                        while (appointmentToCancelIndex < 0 || appointmentToCancelIndex > patientAppointments.Count -1)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Wrong number, try again");
-                            Console.ResetColor();
-                            appointmentToCancelIndex = Int32.Parse(Console.ReadLine());
-                        }
-                        patientAppointments[appointmentToCancelIndex].IsCompleted = true;
+                        var appointmentToCancelIndex = Int32.Parse(appointmentToCancel);
+                        //while (appointmentToCancelIndex < 0 || appointmentToCancelIndex > patientAppointments.Count -1)
+                        //{
+                        //    Console.ForegroundColor = ConsoleColor.Red;
+                        //    Console.WriteLine("Wrong number, try again");
+                        //    Console.ResetColor();
+                        //    appointmentToCancelIndex = Int32.Parse(Console.ReadLine());
+                        //}
+                        appointmentSelected.IsCompleted = true;
 
                         int index = appointments.FindIndex(e => e.Id == patientAppointments[appointmentToCancelIndex].Id);
                         appointments[index] = patientAppointments[appointmentToCancelIndex];

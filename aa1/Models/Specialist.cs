@@ -16,8 +16,6 @@ namespace aa1.Models
         public DateTime BirthDate { get; set; }
         public string Speciality { get; set; }
         public string UserName { get; set; }
-        public string Password { get; set; }
-        //public List<Appointment> Appointments { get; set; }
-        
+        public string Password { get; set; }        
     }
 }
