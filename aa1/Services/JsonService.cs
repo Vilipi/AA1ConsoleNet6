@@ -13,9 +13,14 @@ namespace aa1.Services
 {
     public class JsonService
     {
-        public static string _pathSpecialists = $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\Resource\specialists.json";
-        public static string _pathPatients = $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\Resource\patients.json";
-        public static string _pathAppointments = $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\Resource\appointments.json";
+        //public static string _pathSpecialists = $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\Resource\specialists.json";
+        //public static string _pathPatients = $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\Resource\patients.json";
+        //public static string _pathAppointments = $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\Resource\appointments.json";
+
+        public static string _pathSpecialists = $@"{Path.GetFullPath(Directory.GetCurrentDirectory())}/Resource/specialists.json";
+        public static string _pathPatients = $@"{Path.GetFullPath(Directory.GetCurrentDirectory())}/Resource/patients.json";
+        public static string _pathAppointments = $@"{Path.GetFullPath(Directory.GetCurrentDirectory())}/Resource/appointments.json";
+
         ILogger _logger = LoggerFactory.Create(builder => builder.AddNLog()).CreateLogger<Program>();
 
         public string GetListFromFile(string fileClass)

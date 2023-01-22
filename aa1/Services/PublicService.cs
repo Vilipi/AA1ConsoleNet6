@@ -25,7 +25,6 @@ namespace aa1.Services
             specialist.ForEach(e =>
             {
                 table.AddRow($"{e.Speciality}", $"{e.Name} {e.LastName}");
-                //Console.WriteLine($" - {e.Speciality}: {e.Name} {e.LastName}");
             });
             AnsiConsole.Write(table);
 

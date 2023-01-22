@@ -300,8 +300,9 @@ namespace aa1.Services
                     table.AddColumn(new TableColumn("Total amount"));
                     patientAppointments.ForEach(e => 
                     {
-                        var currency = "EUR";
-                        var price = e.Price == 0 ? "Pending" : e.Price.ToString("F");
+                        string currEnv = Environment.GetEnvironmentVariable("currency");
+                        var currency = currEnv == "eu" ? "EUR" : "$";
+                        var price = e.Price == 0 ? "Pending" : $"{e.Price.ToString("F")} {currency}";
                         var comments = e.SpecialistComment == null ? "Pending" : e.SpecialistComment;
                         table.AddRow($"{e.Id}", $"{e.Name}", $"{comments}", $"{price}");
                     });

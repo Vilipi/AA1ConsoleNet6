@@ -112,20 +112,22 @@ namespace aa1.Services
             }
             else
             {
-                var currency = "EUR";
+                string currEnv = Environment.GetEnvironmentVariable("currency");
+                var currency = currEnv == "eu" ? "EUR" : "$";
+
                 var table = new Table();
                 table.BorderColor(Color.SkyBlue2);
                 table.AddColumn(new TableColumn("Id"));
                 table.AddColumn(new TableColumn("Status"));
                 table.AddColumn(new TableColumn("Name"));
                 table.AddColumn(new TableColumn("Patient"));
-                table.AddColumn(new TableColumn($"Price {currency}"));
+                table.AddColumn(new TableColumn($"Price"));
                 table.AddColumn(new TableColumn("Comments"));
 
                 specialistAppointments.ForEach(e =>
                 {
                     string status = e.IsCompleted == true ? "finished" : "active";
-                    string price = e.Price == null ? "Pending" : $"{e.Price}";
+                    string price = e.Price == null ? "Pending" : $"{e.Price} {currency}";
                     string comments = e.SpecialistComment == null ? "Pending" : $"{e.SpecialistComment}";
                     table.AddRow($"{e.Id}", $"{status}",$"{e.Name}", $"{e.Patient.Name}{e.Patient.LastName}", $"{price}", $"{comments}");
                 });
