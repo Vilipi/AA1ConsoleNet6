@@ -1,1 +1,172 @@
-[]
+[
+  {
+    "Id": 1,
+    "Name": "juana-General-Book-1",
+    "Specialist": {
+      "Id": 1,
+      "Name": "Tom",
+      "LastName": "Johnson",
+      "IsRetired": false,
+      "Rating": 0.1,
+      "BirthDate": "1876-01-02T00:00:00",
+      "Speciality": "General",
+      "UserName": "General",
+      "Password": "general1"
+    },
+    "Patient": {
+      "Name": "juana",
+      "LastName": "gabanna",
+      "Gender": "playerea",
+      "BirthDate": "2010-05-01T00:00:00",
+      "IsUnderage": true,
+      "UserName": "juana",
+      "Password": "juana",
+      "Email": "juana@gmail.uk.com",
+      "Appointments": [
+        1
+      ]
+    },
+    "AppointmentCreationDate": "2023-01-22T19:11:55.158187+01:00",
+    "IsCompleted": true,
+    "Price": 0.0,
+    "SpecialistComment": null
+  },
+  {
+    "Id": 2,
+    "Name": "juana-Dentist-Book-2",
+    "Specialist": {
+      "Id": 2,
+      "Name": "Gregory",
+      "LastName": "House",
+      "IsRetired": false,
+      "Rating": 0.1,
+      "BirthDate": "1985-01-03T00:00:00",
+      "Speciality": "Dentist",
+      "UserName": "dentist",
+      "Password": "dentist1"
+    },
+    "Patient": {
+      "Name": "juana",
+      "LastName": "gabanna",
+      "Gender": "playerea",
+      "BirthDate": "2010-05-01T00:00:00",
+      "IsUnderage": true,
+      "UserName": "juana",
+      "Password": "juana",
+      "Email": "juana@gmail.uk.com",
+      "Appointments": [
+        1,
+        2
+      ]
+    },
+    "AppointmentCreationDate": "2023-01-22T19:11:59.3221933+01:00",
+    "IsCompleted": false,
+    "Price": 50.0,
+    "SpecialistComment": "Everything ok"
+  },
+  {
+    "Id": 3,
+    "Name": "juana-Pediatrician-Book-3",
+    "Specialist": {
+      "Id": 4,
+      "Name": "Agnieszka",
+      "LastName": "Duda",
+      "IsRetired": false,
+      "Rating": 0.1,
+      "BirthDate": "1992-01-08T00:00:00",
+      "Speciality": "Pediatrician",
+      "UserName": "derma",
+      "Password": "derma1"
+    },
+    "Patient": {
+      "Name": "juana",
+      "LastName": "gabanna",
+      "Gender": "playerea",
+      "BirthDate": "2010-05-01T00:00:00",
+      "IsUnderage": true,
+      "UserName": "juana",
+      "Password": "juana",
+      "Email": "juana@gmail.uk.com",
+      "Appointments": [
+        1,
+        2,
+        3
+      ]
+    },
+    "AppointmentCreationDate": "2023-01-22T19:12:02.2665731+01:00",
+    "IsCompleted": false,
+    "Price": 0.0,
+    "SpecialistComment": null
+  },
+  {
+    "Id": 4,
+    "Name": "juana-General-Book-4",
+    "Specialist": {
+      "Id": 1,
+      "Name": "Tom",
+      "LastName": "Johnson",
+      "IsRetired": false,
+      "Rating": 0.1,
+      "BirthDate": "1876-01-02T00:00:00",
+      "Speciality": "General",
+      "UserName": "General",
+      "Password": "general1"
+    },
+    "Patient": {
+      "Name": "juana",
+      "LastName": "gabanna",
+      "Gender": "playerea",
+      "BirthDate": "2010-05-01T00:00:00",
+      "IsUnderage": true,
+      "UserName": "juana",
+      "Password": "juana",
+      "Email": "juana@gmail.uk.com",
+      "Appointments": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "AppointmentCreationDate": "2023-01-22T19:16:15.2393388+01:00",
+    "IsCompleted": true,
+    "Price": 0.0,
+    "SpecialistComment": null
+  },
+  {
+    "Id": 5,
+    "Name": "juana-Dentist-Book-5",
+    "Specialist": {
+      "Id": 2,
+      "Name": "Gregory",
+      "LastName": "House",
+      "IsRetired": false,
+      "Rating": 0.1,
+      "BirthDate": "1985-01-03T00:00:00",
+      "Speciality": "Dentist",
+      "UserName": "dentist",
+      "Password": "dentist1"
+    },
+    "Patient": {
+      "Name": "juana",
+      "LastName": "gabanna",
+      "Gender": "playerea",
+      "BirthDate": "2010-05-01T00:00:00",
+      "IsUnderage": true,
+      "UserName": "juana",
+      "Password": "juana",
+      "Email": "juana@gmail.uk.com",
+      "Appointments": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "AppointmentCreationDate": "2023-01-22T19:16:47.3062332+01:00",
+    "IsCompleted": false,
+    "Price": 0.0,
+    "SpecialistComment": null
+  }
+]

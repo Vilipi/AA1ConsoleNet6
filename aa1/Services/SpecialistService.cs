@@ -1,4 +1,7 @@
 ﻿using aa1.Models;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +13,8 @@ namespace aa1.Services
     public class SpecialistService
     {
         JsonService _jsonService = new JsonService();
+        ILogger _logger = LoggerFactory.Create(builder => builder.AddNLog()).CreateLogger<Program>();
+
 
         public int SpecialistMenu() 
         {
@@ -25,6 +30,7 @@ namespace aa1.Services
 
         private Specialist SignIn()
         {
+
             var specilasitsString = _jsonService.GetListFromFile("specialist");
             var specialists = _jsonService.DeserializeSpecialistsJsonFile(specilasitsString);
             Console.WriteLine("Please login using your credentials\n");
@@ -52,8 +58,10 @@ namespace aa1.Services
                 inputPassword = Console.ReadLine();
                 existingSpecialist = specialists.Find(x => x.UserName == inputUsername);
             }
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"\nHi {existingSpecialist.Name} {existingSpecialist.LastName}");
-
+            Console.ResetColor();
+            _logger.LogInformation($"Specialist {existingSpecialist.Name} {existingSpecialist.LastName} logged in");
             return existingSpecialist;
         }
 
@@ -80,20 +88,20 @@ namespace aa1.Services
             switch (loggedSpecialistAction)
             {
                 case "1":
-                    listAppointments(appointments, specialist);
+                    ListAppointments(appointments, specialist);
                     return 1;
                 case "2":
-                    searchAppointment(appointments, specialist);
+                    SearchAppointment(appointments, specialist);
                     return 1;
                 case "3":
-                    modifyAppointment(appointments, specialist);
+                    ModifyAppointment(appointments, specialist);
                     return 1;
                 default:
                     return 0;
             }
         }
 
-        private void listAppointments(List<Appointment> appointments, Specialist specialist)
+        private void ListAppointments(List<Appointment> appointments, Specialist specialist)
         {
             var specialistAppointments = appointments.FindAll(e => e.Specialist.UserName == specialist.UserName).ToList();
             if(specialistAppointments.Count < 1)
@@ -104,26 +112,28 @@ namespace aa1.Services
             }
             else
             {
-                int count = 1;
+                var currency = "EUR";
+                var table = new Table();
+                table.BorderColor(Color.SkyBlue2);
+                table.AddColumn(new TableColumn("Id"));
+                table.AddColumn(new TableColumn("Status"));
+                table.AddColumn(new TableColumn("Name"));
+                table.AddColumn(new TableColumn("Patient"));
+                table.AddColumn(new TableColumn($"Price {currency}"));
+                table.AddColumn(new TableColumn("Comments"));
+
                 specialistAppointments.ForEach(e =>
                 {
-                    Console.WriteLine($"\n· {count}:");
-                    Console.WriteLine($" - Id: {e.Id}");
                     string status = e.IsCompleted == true ? "finished" : "active";
-                    Console.WriteLine($" - Status: {status}");
-                    Console.WriteLine($" - Name: {e.Name}");
-                    Console.WriteLine($" - Patient: {e.Patient.Name} {e.Patient.LastName}");
                     string price = e.Price == null ? "Pending" : $"{e.Price}";
-                    Console.WriteLine($" - Price: {price}");
                     string comments = e.SpecialistComment == null ? "Pending" : $"{e.SpecialistComment}";
-                    Console.WriteLine($" - Comments: {comments}");
-                    count++;
+                    table.AddRow($"{e.Id}", $"{status}",$"{e.Name}", $"{e.Patient.Name}{e.Patient.LastName}", $"{price}", $"{comments}");
                 });
+                AnsiConsole.Write(table);
             }
-            
-        }
 
-        private int modifyAppointment(List<Appointment> appointments, Specialist specialist)
+        }
+        private int ModifyAppointment(List<Appointment> appointments, Specialist specialist)
         {
             var specialistAppointments = appointments.FindAll(e => e.Specialist.UserName == specialist.UserName && e.IsCompleted == false).ToList();
             if(specialistAppointments.Count < 1)
@@ -211,7 +221,7 @@ namespace aa1.Services
                         return 1;
 
                     case "2":
-                        if (appointmentSelected.SpecialistComment == null)
+                        if (appointmentSelected.SpecialistComment != null)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("This appointment already has a comment\n");
@@ -258,7 +268,7 @@ namespace aa1.Services
             
         }
 
-        private int searchAppointment(List<Appointment> appointments, Specialist specialist)
+        private int SearchAppointment(List<Appointment> appointments, Specialist specialist)
         {
             var specialistAppointments = appointments.FindAll(e => e.Specialist.UserName == specialist.UserName).ToList();
             Console.WriteLine("Introduce the name of the patient to find their appointments");
@@ -274,7 +284,9 @@ namespace aa1.Services
             });
             if(patientAppointments.Count < 1)
             {
-                Console.WriteLine("Appointmets for this patients not found");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Appointments not found\n");
+                Console.ResetColor();
             }
             else
             {

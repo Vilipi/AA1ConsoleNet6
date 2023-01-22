@@ -1,21 +1,18 @@
 ﻿using aa1.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
+using Spectre.Console;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Xml.Linq;
+
 
 namespace aa1.Services
 {
     public class PatientService
     {
         JsonService _jsonService = new JsonService();
+        ILogger _logger = LoggerFactory.Create(builder => builder.AddNLog()).CreateLogger<Program>();
 
         public int PatientMenu()
         {
@@ -153,7 +150,7 @@ namespace aa1.Services
                 existingUser = patients.Find(x => x.UserName == inputUsername);
             }
             Console.WriteLine($"\nHi {existingUser.Name} {existingUser.LastName}");
-
+            _logger.LogInformation($"Patient {existingUser.Name} {existingUser.LastName} logged in");
             return existingUser;
         }
         private int LoggedPatientMenu(Patient patient) 
@@ -295,14 +292,21 @@ namespace aa1.Services
                 }
                 else
                 {
+                    var table = new Table();
+                    table.BorderColor(Color.SkyBlue2);
+                    table.AddColumn(new TableColumn("Id"));
+                    table.AddColumn(new TableColumn("Apointment Name"));
+                    table.AddColumn(new TableColumn("Comments"));
+                    table.AddColumn(new TableColumn("Total amount"));
                     patientAppointments.ForEach(e => 
                     {
-                        var price = e.Price == 0 ? "Pending" : e.Price.ToString();
+                        var currency = "EUR";
+                        var price = e.Price == 0 ? "Pending" : e.Price.ToString("F");
                         var comments = e.SpecialistComment == null ? "Pending" : e.SpecialistComment;
-                        Console.WriteLine($"- Appointment id: #{e.Id}-{e.Name}");
-                        Console.WriteLine($" - Total amount: {price}");
-                        Console.WriteLine($" - Comments: {comments}\n");
+                        table.AddRow($"{e.Id}", $"{e.Name}", $"{comments}", $"{price}");
                     });
+                    AnsiConsole.Write(table);
+
                     Console.WriteLine("");
                     Console.WriteLine("Would you like to cancel an appointment?");
                     Console.WriteLine(" - 1: Yes");
@@ -319,12 +323,20 @@ namespace aa1.Services
                     if (cancelRespone == "1")
                     {
                         Console.WriteLine("Choose the appointment you want to cancel");
-                         
+                        var tableCancel = new Table();
+                        tableCancel.BorderColor(Color.SkyBlue2);
+
+                        tableCancel.AddColumn(new TableColumn("Id"));
+                        tableCancel.AddColumn(new TableColumn("Apointment Name"));
 
                         for (int i = 0; i < patientAppointments.Count; i++)
                         {
-                            Console.WriteLine($" - {i}: {patientAppointments[i].Name} - Id:{patientAppointments[i].Id}");
+                            tableCancel.AddRow($"{patientAppointments[i].Id}", $"{patientAppointments[i].Name}");
+
+                            Console.WriteLine($" - Id:{patientAppointments[i].Id}: {patientAppointments[i].Name}");
                         }
+                        AnsiConsole.Write(tableCancel);
+
                         var appointmentToCancel = Console.ReadLine();
                         int appointmentToCancelInt;
                         bool appointmentToCancelBool = int.TryParse(appointmentToCancel, out appointmentToCancelInt);
@@ -344,17 +356,11 @@ namespace aa1.Services
                             appointmentSelected = patientAppointments.Find(e => e.Id == appointmentToCancelInt);
                         }
                         var appointmentToCancelIndex = Int32.Parse(appointmentToCancel);
-                        //while (appointmentToCancelIndex < 0 || appointmentToCancelIndex > patientAppointments.Count -1)
-                        //{
-                        //    Console.ForegroundColor = ConsoleColor.Red;
-                        //    Console.WriteLine("Wrong number, try again");
-                        //    Console.ResetColor();
-                        //    appointmentToCancelIndex = Int32.Parse(Console.ReadLine());
-                        //}
+
                         appointmentSelected.IsCompleted = true;
 
-                        int index = appointments.FindIndex(e => e.Id == patientAppointments[appointmentToCancelIndex].Id);
-                        appointments[index] = patientAppointments[appointmentToCancelIndex];
+                        int index = appointments.FindIndex(e => e.Id == appointmentSelected.Id);
+                        appointments[index] = appointmentSelected;
                         _jsonService.SerealizeAppointmentJsonFile(appointments); //modifiying patient file
 
                         Console.ForegroundColor = ConsoleColor.Green;
