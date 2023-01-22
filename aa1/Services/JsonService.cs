@@ -1,8 +1,11 @@
 ﻿using aa1.Models;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using NLog.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,24 +16,36 @@ namespace aa1.Services
         public static string _pathSpecialists = $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\Resource\specialists.json";
         public static string _pathPatients = $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\Resource\patients.json";
         public static string _pathAppointments = $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}\Resource\appointments.json";
+        ILogger _logger = LoggerFactory.Create(builder => builder.AddNLog()).CreateLogger<Program>();
 
         public string GetListFromFile(string fileClass)
         {
-            string dataJsonFromFile;
-            string path;
-
-            if (fileClass == "specialist")
-                path = _pathSpecialists;
-            else if (fileClass == "appointment")
-                path = _pathAppointments;
-            else
-                path = _pathPatients;
-
-            using (var reader = new StreamReader(path))
+            try
             {
-                dataJsonFromFile = reader.ReadToEnd();
+                string dataJsonFromFile;
+                string path;
+
+                if (fileClass == "specialist")
+                    path = _pathSpecialists;
+                else if (fileClass == "appointment")
+                    path = _pathAppointments;
+                else
+                    path = _pathPatients;
+
+                using (var reader = new StreamReader(path))
+                {
+                    dataJsonFromFile = reader.ReadToEnd();
+                }
+                _logger.LogInformation($"File {path} succesfully found");
+
+                return dataJsonFromFile;
             }
-            return dataJsonFromFile;
+            
+            catch(Exception ex)
+            {
+                _logger.LogDebug(ex.ToString(), "Error - Path not found");    
+                return fileClass;
+            }
         }
         public List<Specialist> DeserializeSpecialistsJsonFile(string specilistsJsonFromFile)
         {
