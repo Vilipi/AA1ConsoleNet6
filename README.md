@@ -7,9 +7,9 @@ comentarios, precio y cancelando la cita. Tambien contaremos con un buscador par
 Tambien hay un area pública donde cualquier usuario puede ver los especialistas sin necesidad de logearsa.
 
 ###### Docker
-docker build -t aa1net6:1.7 .
-docker run -it  -v /logs aa1net6:1.7
-docker exec -it CONTAINER /bin/bash
+- docker build -t aa1net6:1.7 .
+- docker run -it  -v /logs aa1net6:1.7
+- docker exec -it CONTAINER /bin/bash
 
 ###### Especificaciones
 - Menú principal y secundarios para navegar entre las funcionalidades interactuando a través de la consola de la aplicación.
