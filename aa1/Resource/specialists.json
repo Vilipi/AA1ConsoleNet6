@@ -55,8 +55,8 @@
     "Rating": 0.1,
     "BirthDate": "01/08/1992",
     "Speciality": "Pediatrician",
-    "UserName": "derma",
-    "Password": "derma1",
+    "UserName": "pedi",
+    "Password": "pedi1",
     "Appointments": []
   }
 ]

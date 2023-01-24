@@ -16,4 +16,9 @@
   <ItemGroup>
 	<None Update="nlog.config" CopyToOutputDirectory="Always" />
   </ItemGroup>
+  <ItemGroup>
+	<None Update="Resource/*">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</None>
+  </ItemGroup>
 </Project>
