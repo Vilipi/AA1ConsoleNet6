@@ -8,7 +8,7 @@ Tambien hay un area pública donde cualquier usuario puede ver los especialistas
 
 ###### Docker
 - docker build -t aa1net6:1.7 .
-- docker run -it  -v /logs aa1net6:1.7
+- docker run -it  -v /logs -p 50552 aa1net6:1.7
 - docker exec -it CONTAINER /bin/bash
 - docker pull vicelp/aa1net6console:aa1consoleusa
 - docker run -it --rm -v /logs vicelp/aa1net6console:aa1consoleusa
