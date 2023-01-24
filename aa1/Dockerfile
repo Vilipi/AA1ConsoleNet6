@@ -7,7 +7,7 @@ RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
-ENV currency eu
+ENV currency dolar
 
 WORKDIR /Application
 COPY --from=build-env /App/out .

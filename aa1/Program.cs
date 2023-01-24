@@ -1,14 +1,18 @@
 ﻿using aa1.Services;
 using Microsoft.Extensions.Logging;
 using NLog;
+using NLog.Extensions.Logging;
 using System.Globalization;
 
-
-//var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-//logger.Debug("init main"); // si aparece esto texto,  sginfica que logger esta funcionando bien
-
-
+var _logger = LoggerFactory.Create(builder => builder.AddNLog()).CreateLogger<Program>();
 MainMenuService MainMenuService = new MainMenuService();
 
-MainMenuService.MainMenu();
+try
+{
+    MainMenuService.MainMenu();
+}
+catch(Exception ex)
+{
+    _logger.LogDebug(ex.Message);
+}
    

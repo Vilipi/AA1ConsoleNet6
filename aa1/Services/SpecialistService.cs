@@ -18,14 +18,21 @@ namespace aa1.Services
 
         public int SpecialistMenu() 
         {
-            var specialistLogged = SignIn();
-            var menu = LoggedSpecialistMenu(specialistLogged);
-            while (menu != 0)
+            try
             {
-                menu = LoggedSpecialistMenu(specialistLogged);
+                var specialistLogged = SignIn();
+                var menu = LoggedSpecialistMenu(specialistLogged);
+                while (menu != 0)
+                {
+                    menu = LoggedSpecialistMenu(specialistLogged);
+                }
+                return 0;
             }
-            return 0;
-
+            catch (Exception ex)
+            {
+                _logger.LogDebug(ex.Message);
+                return 0;
+            }
         }
 
         private Specialist SignIn()

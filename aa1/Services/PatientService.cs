@@ -16,38 +16,47 @@ namespace aa1.Services
 
         public int PatientMenu()
         {
-            Console.WriteLine("Please write a number to choose an action:");
-            Console.WriteLine(" - 1: Sign up");
-            Console.WriteLine(" - 2: Sign in");
-            Console.WriteLine(" - 3: Back");
-            string login = Console.ReadLine();
-            while(login != "1" && login != "2" && login != "3")
+            try
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Wrong number, try again");
-                Console.ResetColor();
-                login = Console.ReadLine();
+                Console.WriteLine("Please write a number to choose an action:");
+                Console.WriteLine(" - 1: Sign up");
+                Console.WriteLine(" - 2: Sign in");
+                Console.WriteLine(" - 3: Back");
+                string login = Console.ReadLine();
+                while (login != "1" && login != "2" && login != "3")
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Wrong number, try again");
+                    Console.ResetColor();
+                    login = Console.ReadLine();
 
-            }
+                }
 
-            if (login == "1")
-            {
-               return SignUp();
+                if (login == "1")
+                {
+                    return SignUp();
+                }
+                else if (login == "2")
+                {
+                    var userLogged = SignIn();
+                    var menu = LoggedPatientMenu(userLogged);
+                    while (menu != 0)
+                    {
+                        menu = LoggedPatientMenu(userLogged);
+                    }
+                    return 0;
+                }
+                else
+                {
+                    return 0;
+                }
             }
-            else if(login == "2")
+            catch(Exception ex)
             {
-               var userLogged = SignIn();
-               var menu = LoggedPatientMenu(userLogged);
-               while (menu != 0)
-               {
-                    menu = LoggedPatientMenu(userLogged);
-               }
+                _logger.LogDebug(ex.Message);
                 return 0;
             }
-            else
-            {
-                return 0;
-            }
+           
         }
         private int SignUp()
         {
