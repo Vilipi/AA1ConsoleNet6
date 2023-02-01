@@ -1,10 +1,10 @@
 ## APPConsoleNet6
 
-Esta aplicación trata de el manejo de citas en un centro médico.
-Podremos crear un nuevo usuario donde seremos el paciente y podremo pedir, listar y cancelar las citas que queramos.
-Desde el punto de vista del médico, podemos logearnos y tratar con las citas que tengamos. Podremos modificarlas añadiendo
+Esta aplicación trata sobre el manejo de citas en un centro médico.
+Podremos crear un nuevo usuario donde seremos el paciente y podremos pedir, listar y cancelar las citas que queramos.
+Desde el punto de vista del médico, podremos logearnos y tratar con las citas que tengamos. Podremos modificarlas añadiendo
 comentarios, precio y cancelando la cita. Tambien contaremos con un buscador para buscars las citas de los pacientes filtrando por nombre.
-Tambien hay un area pública donde cualquier usuario puede ver los especialistas sin necesidad de logearsa.
+Tambien hay un area pública donde cualquier usuario puede ver los especialistas sin necesidad de logearse.
 
 ###### Docker
 - docker build -t aa1net6:1.7 .
